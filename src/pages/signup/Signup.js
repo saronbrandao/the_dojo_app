@@ -20,7 +20,7 @@ const Signup = () => {
   const handleFileChange = (e) => {
     setThumbnail(null);
     let selected = e.target.files[0];
-    console.log(selected);
+    // console.log(selected);
 
     if (!selected) {
       setThumbnailError('Please select a file');

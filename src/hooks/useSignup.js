@@ -1,5 +1,9 @@
 import { useState, useEffect } from 'react';
-import { projectAuth, projectStorage } from '../firebase/config';
+import {
+  projectAuth,
+  projectStorage,
+  projectFirestore,
+} from '../firebase/config';
 import { useAuthContext } from './useAuthContext';
 
 export const useSignup = () => {
@@ -33,6 +37,16 @@ export const useSignup = () => {
 
       // add display name and profile image to user profile
       await res.user.updateProfile({ displayName, photoURL: imgUrl });
+
+      // create a user document creating a custom id for the collection and then the doc inside will have the user id.
+      // this why we use the doc() method instead of add method(). This will create a doc inside users collection that has the
+      // passed user id.
+      // the set() method will set the properties of the newly created document.
+      await projectFirestore.collection('users').doc(res.user.uid).set({
+        online: true,
+        displayName,
+        photoURL: imgUrl,
+      });
 
       // dispatch login action
       dispatch({ type: 'LOGIN', payload: res.user });

@@ -16,7 +16,6 @@ import OnlineUsers from './components/OnlineUsers';
 
 function App() {
   const { user, authIsReady } = useAuthContext();
-  console.log('test');
 
   return (
     <div className="App">

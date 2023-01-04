@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Select from 'react-select';
+import { useCollection } from '../../hooks/useCollection';
 
 // styles
 import './Create.css';
@@ -7,6 +8,7 @@ import './Create.css';
 // bellow you see the options that would be present in a <option> tag,
 // but we will use a react hook for this instead. For example:
 // <option value="">Label</option>
+
 const categories = [
   { value: 'development', label: 'Development' },
   { value: 'design', label: 'Design' },
@@ -15,15 +17,39 @@ const categories = [
 ];
 
 const Create = () => {
+  const { documents } = useCollection('users');
+  const [users, setUsers] = useState();
+
   const [name, setName] = useState('');
   const [details, setDetails] = useState('');
   const [dueDate, setDueDate] = useState('');
   const [category, setCategory] = useState('');
   const [assignedUsers, setAssignedUsers] = useState([]);
+  const [formError, setFormError] = useState(null);
+
+  useEffect(() => {
+    if (documents) {
+      const options = documents.map((user) => {
+        return { value: user, label: user.displayName };
+      });
+      setUsers(options);
+    }
+  }, [documents]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(name, details, dueDate, category.value);
+    setFormError(null);
+
+    if (!category) {
+      setFormError('Please select a project category');
+      return;
+    }
+    if (assignedUsers.length < 1) {
+      setFormError('Please assign project to at least 1 user');
+      return;
+    }
+
+    console.log(name, details, dueDate, category.value, assignedUsers);
   };
 
   return (
@@ -66,10 +92,15 @@ const Create = () => {
         </label>
         <label>
           <span>Assign to:</span>
-          {/* assignee select here */}
+          <Select
+            onChange={(option) => setAssignedUsers(option)}
+            options={users}
+            isMulti
+          />
         </label>
 
         <button className="btn"> Add Project</button>
+        {formError && <p className="error">{formError}</p>}
       </form>
     </div>
   );

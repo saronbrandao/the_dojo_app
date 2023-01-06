@@ -1,6 +1,10 @@
 import { useState, useEffect } from 'react';
 import Select from 'react-select';
 import { useCollection } from '../../hooks/useCollection';
+import { timestamp } from '../../firebase/config';
+import { useAuthContext } from '../../hooks/useAuthContext';
+import { useFirestore } from '../../hooks/useFirestore';
+import { useHistory } from 'react-router-dom';
 
 // styles
 import './Create.css';
@@ -17,9 +21,11 @@ const categories = [
 ];
 
 const Create = () => {
+  const history = useHistory();
+  const { addDocument, response } = useFirestore('projects');
   const { documents } = useCollection('users');
   const [users, setUsers] = useState();
-
+  const { user } = useAuthContext();
   const [name, setName] = useState('');
   const [details, setDetails] = useState('');
   const [dueDate, setDueDate] = useState('');
@@ -36,7 +42,7 @@ const Create = () => {
     }
   }, [documents]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setFormError(null);
 
@@ -49,7 +55,36 @@ const Create = () => {
       return;
     }
 
-    console.log(name, details, dueDate, category.value, assignedUsers);
+    const createdBy = {
+      displayName: user.displayName,
+      photoUrl: user.photoURL,
+      id: user.uid,
+    };
+
+    console.log(createdBy);
+
+    const assignedUsersList = assignedUsers.map((u) => {
+      return {
+        displayName: u.value.displayName,
+        photoURL: u.value.photoURL,
+        id: u.value.id,
+      };
+    });
+
+    const project = {
+      name,
+      details,
+      category: category.value,
+      dueDate: timestamp.fromDate(new Date(dueDate)),
+      comments: [],
+      createdBy,
+      assignedUsersList,
+    };
+
+    await addDocument(project);
+    if (!response.error) {
+      history.push('/');
+    }
   };
 
   return (
@@ -68,7 +103,7 @@ const Create = () => {
         <label>
           <span>Project details:</span>
           <textarea
-            required
+            // required
             type="text"
             onChange={(e) => setDetails(e.target.value)}
             value={details}
@@ -77,7 +112,7 @@ const Create = () => {
         <label>
           <span>Set due date:</span>
           <input
-            required
+            // required
             type="date"
             onChange={(e) => setDueDate(e.target.value)}
             value={dueDate}

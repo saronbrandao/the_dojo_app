@@ -64,7 +64,6 @@ export const useFirestore = (collection) => {
     dispatch({ type: 'IS_PENDING' });
 
     try {
-      console.log('testing..');
       const createdAt = timestamp.fromDate(new Date());
       const addedDocument = await ref.add({ ...doc, createdAt });
       dispatchIfNotCancelled({

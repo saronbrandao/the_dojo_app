@@ -61,8 +61,6 @@ const Create = () => {
       id: user.uid,
     };
 
-    console.log(createdBy);
-
     const assignedUsersList = assignedUsers.map((u) => {
       return {
         displayName: u.value.displayName,

@@ -13,7 +13,7 @@ Check out the live demo: [The Dojo Web App](https://roaring-kulfi-3d8733.netlify
 
 ## Technologies Used
 - HTML
-- SCSS
+- CSS
 - React
 - Firebase (Firestore, Firebase Authentication)
 

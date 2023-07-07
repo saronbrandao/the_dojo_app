@@ -2,7 +2,10 @@
 
 The Dojo is a team task management web application designed to streamline project workflows and enhance collaboration. With The Dojo, you can easily generate tickets for projects, assign tasks to specific team members, and facilitate seamless communication through comments. Developed using HTML, SCSS, React, and Firebase.
 
-Check out the live demo: [The Dojo Web App](https://roaring-kulfi-3d8733.netlify.app/)
+Check out the live demo:
+username: guest@guest.com
+password: 123123
+[The Dojo Web App](https://roaring-kulfi-3d8733.netlify.app/)
 
 ## Features
 - Task Generation: Create tickets for projects and outline the specific tasks required.
